@@ -1,1 +1,1 @@
-web: ./target/release/main
+web: ./target/release/epic-style
