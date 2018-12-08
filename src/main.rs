@@ -24,10 +24,14 @@ fn main() {
         .resource("/", |r| r.f(index))
     );
     
-    // let this server listen to development updates for hot-reloading
     let mut listenfd = ListenFd::from_env();
-    let cargo_watch = listenfd.take_tcp_listener(0).unwrap().unwrap();
-    let server = server.listen(cargo_watch);
+    let server = if let Some(cargo_watch) = listenfd.take_tcp_listener(0).unwrap() {
+        // let this server listen to development updates for hot-reloading
+        server.listen(cargo_watch)
+    } else {
+        // or run it on production
+        server.bind("0.0.0.0:80").unwrap()
+    };
     
     server.run();
 }
