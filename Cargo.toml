@@ -4,4 +4,4 @@ version = "0.1.0"
 authors = ["Callum Hays <callumjhays@gmail.com>"]
 
 [dependencies]
-yew = { git = "https://github.com/DenisKolodin/yew", features = ["toml", "yaml", "msgpack", "cbor"] }
+yew = { git = "https://github.com/DenisKolodin/yew", features = ["cbor"] }
