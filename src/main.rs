@@ -30,7 +30,10 @@ fn main() {
         server.listen(cargo_watch)
     } else {
         // or run it on production
-        server.bind("0.0.0.0:80").unwrap()
+        server.bind(
+            format!("0.0.0.0:{}", env::var("PORT")
+                .unwrap_or("8000".to_string()))
+        ).unwrap()
     };
     
     server.run();
