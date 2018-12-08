@@ -25,7 +25,7 @@ fn main() {
     );
     
     let mut listenfd = ListenFd::from_env();
-    let server = if let Some(cargo_watch) = listenfd.take_tcp_listener(0).unwrap() {
+    let server = if let Ok(Some(cargo_watch)) = listenfd.take_tcp_listener(0) {
         // let this server listen to development updates for hot-reloading
         server.listen(cargo_watch)
     } else {
