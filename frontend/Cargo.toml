@@ -1,0 +1,11 @@
+[package]
+name = "frontend"
+version = "0.0.0"
+authors = ["Callum Hays <callumjhays@gmail.com>"]
+edition = "2018"
+
+[dependencies]
+yew = { git = "https://github.com/DenisKolodin/yew", features = ["cbor"] }
+
+[dev-dependencies]
+cargo-web = "0.6"
