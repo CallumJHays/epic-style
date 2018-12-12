@@ -1,0 +1,11 @@
+[package]
+name = "epic-style"
+version = "0.1.0"
+authors = ["Callum Hays <callumjhays@gmail.com>"]
+
+[dependencies]
+actix-web = "0.7"
+sentry = "0.12.0"
+sentry-actix = "0.12.0"
+listenfd = "0.3"
+yew = { git = "https://github.com/DenisKolodin/yew", features = ["cbor"] }
