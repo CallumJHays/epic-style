@@ -1,7 +1,7 @@
 SHELL := /bin/bash
 
 all:
-	cargo web build --target=wasm32-unknown-emscripten --release
-	mkdir -p site
-	find target/wasm32-unknown-emscripten/release/deps -type f -name "*.wasm" | xargs -I {} cp {} site/wasm_demo.wasm
-	find target/wasm32-unknown-emscripten/release/deps -type f ! -name "*.asm.js" -name "*.js" | xargs -I {} cp {} site/site.js
+	cargo web build --runtime library-es6 --target=wasm32-unknown-unknown --release
+	mkdir -p ../static
+	find target/wasm32-unknown-unknown/release -type f -name "*.wasm" | xargs -I {} cp {} ../static/frontend.wasm
+	find target/wasm32-unknown-unknown/release -type f ! -name "*.asm.js" -name "*.js" | xargs -I {} cp {} ../static/mounter.mjs
