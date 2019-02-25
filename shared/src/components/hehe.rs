@@ -16,6 +16,8 @@ component! {
     type Self = Hehe;
     
     create(props: Hehe, link) => {
+        // instantiation proptype that work with both horrorshow
+        // and yew's jsx-like type-safe templates - its black magic!
         props
     }
     
@@ -26,6 +28,6 @@ component! {
     }
     
     update(&mut self, msg: Msg) => {
-        true
+        true  // trigger view?
     }
 }
