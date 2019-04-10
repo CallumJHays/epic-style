@@ -1,7 +1,7 @@
 // using this crate's functionally equivalent code, this crate
 // wraps `serde` to overcome a slightly annoying issue when dealing with
 // using traits for trait objects - when boxing them
-// eg: Box<IsomorphicComponent> => `Compiiler E
+// eg: Box<IsomorphicComponent> => `Compiler E
 
 use std::fmt;
 use serde::de::{Deserialize, Deserializer, Visitor, MapAccess};
@@ -10,7 +10,14 @@ use serde_json;
 
 use crate::components::hehe::Hehe;
 
-pub trait Isomorphic: Serialize {}
+pub trait Isomorphic: Serialize {
+    // this should really be a static method, however - to make this a serializable trait object,
+    // no static methods should be present on the object (this requires a refactor in the rust compiler to fix,
+    // and is currently being worked on).
+
+    // implementations of this method shoonuld NOT rely on the contents of &self for its definition.
+    fn _type_name(&self) -> &'static str;
+}
 
 serialize_trait_object!(Isomorphic);
 
@@ -21,12 +28,8 @@ pub struct IsoWrapper {
     box_model: Box<Isomorphic>
 }
 
-pub trait IsoWrappable {
-    fn _type_name() -> &'static str;
-}
 
-
-impl<I> From<Box<I>> for IsoWrapper where I: IsoWrappable {
+impl<I> From<Box<I>> for IsoWrapper {
     fn from(box_model: Box<I>) -> Self {
         Self {
             type_name: I::_type_name(),
@@ -52,19 +55,21 @@ impl<'de> Visitor<'de> for IsoWrapperVisitor {
         let mut type_name: Option<&'static str> = None;
         let mut model_json: Option<serde_json::Value> = None;
         
-        while let Some(key) = access.next_key()? {
+        while let Some((key, value)) = access.next_entry()? {
+            let val: serde_json::Value = value;
             match key {
                 "type_name" => {
-                    let t = access.next_value()??;
+                    type_name = Some(&val.to_string());
                 },
                 "box_model" => {
-                    model_json = access.next_value()?;
+                    model_json = Some(value);
                 }
             };
         }
 
         Ok(IsoWrapper {
-            type_name: 
+            type_name: type_name.expect("no type name"),
+            box_model: 
         })
     }
 }
@@ -140,14 +145,10 @@ macro_rules! component {
             
     } => {
     
-        use crate::component::{Isomorphic, IsoWrappable};
+        use crate::component::Isomorphic;
         
-        impl Isomorphic for $selfT {}
-        
-        impl IsoWrappable for $selfT {
-            fn _type_name() -> &'static str {
-                "$selfT"
-            }
+        impl Isomorphic for $selfT {
+            const TYPE_NAME: &'static str = "$selfT";
         }
     
         // only bundle the crates required just for each target separately
