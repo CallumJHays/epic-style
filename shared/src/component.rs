@@ -29,7 +29,7 @@ pub struct IsoWrapper {
 }
 
 
-impl<I> From<Box<I>> for IsoWrapper {
+impl<I: Isomorphic> From<Box<I>> for IsoWrapper {
     fn from(box_model: Box<I>) -> Self {
         Self {
             type_name: I::_type_name(),
