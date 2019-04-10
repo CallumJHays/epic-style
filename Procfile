@@ -1,1 +1,1 @@
-web: ./target/release/epic-style
+web: ./backend/target/release/backend ./frontend/target/release/frontend
