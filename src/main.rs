@@ -50,13 +50,10 @@ fn main() {
     let server = if let Ok(Some(cargo_watch)) = listenfd.take_tcp_listener(0) {
         // let this server listen to development updates for hot-reloading
         server.listen(cargo_watch)
-    } else {
-        // or run it on production
-        server.bind(
-            format!("0.0.0.0:{}", env::var("PORT")
-                .unwrap_or("8000".to_string()))
-        ).unwrap()
-    };
+    } else { server };
     
-    server.run();
+    server.bind(
+        format!("0.0.0.0:{}", env::var("PORT")
+            .unwrap_or("8000".to_string()))
+    ).unwrap().run();
 }
